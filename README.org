@@ -1,0 +1,43 @@
+[[http://wiki.portal.chalmers.se/agda/pmwiki.php][file:https://img.shields.io/badge/language-agda-ff69b4.svg]] [[https://github.com/liamoc/structs/blob/master/LICENSE][file:http://img.shields.io/badge/license-BSD3-brightgreen.svg]]
+
+* Structs
+
+Structs is an Agda library that lets you use anonymous, ML-style records with convenient syntax. Mostly, it's useful as a way to model
+records in formalisations of other languages which have records, as Agda records are nominally typed and dependent, so they're not 
+useful for this purpose.
+
+You can construct records like so:
+
+
+#+BEGIN_SRC agda2
+  -- type can be stated as Struct _, for brevity.
+  test : Struct ( ("foo" , ℕ) ∷ ("bar" , Bool) ∷ ("baz" , Struct [ "msg" , String ] ) ∷ []) 
+  test = ⟨ "foo" ∶ 32 
+         ∷ "bar" ∶ True 
+         ∷ "baz" ∶ ⟨ "msg" ∶ "Hello, Structs!" ∷ [] ⟩
+         ∷ [] 
+         ⟩ 
+#+END_SRC
+
+Assign to them like so:
+
+#+BEGIN_SRC agda2
+  test′ : Struct _
+  test′ = test ∙ "bar" ≔ False
+#+END_SRC
+
+And read from them like so:
+
+#+BEGIN_SRC agda2
+  test″ : String
+  test″ = test′ ∙ "baz" ∙ "msg"
+#+END_SRC
+
+The three lemmas ~spurious-update~, ~read-after-update~ and ~frame-inertia~ give you the ability to prove things
+about these record operations reasonably easily.
+
+There's also some advanced stuff that you probably don't need, but if you want to concatenate records, we have
+~append~ and its inverse ~drop-append~, and the ~TypeChangingAssignment~ module has just that.
+
+Have fun!
+
